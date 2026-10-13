@@ -1,6 +1,7 @@
-/* The Connected World — FIT3179 / consumer electronics.
-   Data are downloaded from the linked original CSVs when the page loads.
-   No fabricated observations. Country coordinates are indicative reference centroids. */
+/* FIT3179 / Consumer electronics.
+   Published indicators load from local snapshots when present, with OWID as fallback.
+   CSVs are never imputed; missing country-years remain missing.
+   The approximate map point locations come from the bundled country metadata. */
 const DATA = {
   access: 'https://ourworldindata.org/grapher/share-of-individuals-using-the-internet.csv?v=1&csvType=full&useColumnShortNames=false',
   subs: 'https://ourworldindata.org/grapher/mobile-cellular-subscriptions-per-100-people.csv?v=1&csvType=full&useColumnShortNames=false',
@@ -29,6 +30,21 @@ const pickCountry=(arr,year,name)=>arr.find(r=>r.year===year&&r.country===name);
 const mapBy=(arr,key)=>new Map(arr.map(r=>[r[key],r]));
 const latestValue=(arr, year, code)=>pickCode(arr,year,code)?.value;
 const present=(arr)=>arr.length>0;
+const normalizeContinent = region => ['Americas','North America','South America'].includes(region) ? 'Americas' : region;
+const median = values => {
+  const sorted=values.filter(Number.isFinite).slice().sort((a,b)=>a-b);
+  if(!sorted.length)return null;
+  const m=Math.floor(sorted.length/2);
+  return sorted.length%2?sorted[m]:(sorted[m-1]+sorted[m])/2;
+};
+function insight(id, message){setText(id,message);}
+function vendorPairs(rows){
+  const malaysia=new Map(rows.filter(r=>r.Market==='Malaysia').map(r=>[r.Vendor,r.Share]));
+  return rows.filter(r=>r.Market==='Worldwide'&&r.Vendor!=='Unknown'&&malaysia.has(r.Vendor))
+    .map(r=>({vendor:r.Vendor, malaysia:malaysia.get(r.Vendor), worldwide:r.Share,
+      gap:malaysia.get(r.Vendor)-r.Share})).sort((a,b)=>b.malaysia-a.malaysia);
+}
+
 async function embed(chartId, specId, change) {
   const div=document.getElementById(chartId);
   if(!div)return;
@@ -51,10 +67,16 @@ async function draw(){
  const net=filterIso(access,y).map(r=>({geo_id:meta[r.iso].geo_id,metric:r.value,country:r.country,year:r.year}));
  await embed('map-access','01_internet_choropleth',s=>{s.transform[0].from.data.values=net;});
  labelData('access',net.length);
+ const myUse=pickCode(access,y,'MYS')?.value, globalUse=pickCountry(access,y,'World')?.value;
+ if(Number.isFinite(myUse)&&Number.isFinite(globalUse))
+   insight('insight-map-access',`In ${y}, Malaysia reported ${fmt(myUse)}% internet use compared with ${fmt(globalUse)}% worldwide — a difference of ${fmt(myUse-globalUse)} percentage points. The map measures access, not phone sales.`);
+ else insight('insight-map-access',`The selected year includes ${net.length} mapped country observations; blank regions have no reported match.`);
  const point=pick(subs,2024).filter(r=>meta[r.iso]?.lat!=null&&meta[r.iso]?.lon!=null &&r.iso.length===3&&r.value<=400)
    .map(r=>({...r,metric:r.value,lat:meta[r.iso].lat,lon:meta[r.iso].lon}));
  await embed('map-subs','02_mobile_symbols',s=>{s.layer[1].data.values=point;});
  labelData('subs',point.length);
+ const highSubs=point.filter(r=>r.metric>100).length;
+ insight('insight-map-subs',`${highSubs} of ${point.length} mapped countries had more than 100 mobile subscriptions per 100 residents in 2024. This can reflect multiple SIM subscriptions, not necessarily more devices than people.`);
  const regionRows={
    'North America':['Northern America (UN)','Northern America'],
    'Latin America & Caribbean':['Latin America and the Caribbean (UN)','Latin America and the Caribbean'],
@@ -75,17 +97,25 @@ async function draw(){
    delete s.data;delete s.mark;delete s.encoding;
  });
  labelData('waste',tileData.length);
+ const north=tileData.find(r=>r.region==='North America')?.rate, africa=tileData.find(r=>r.region==='Africa')?.rate;
+ if(Number.isFinite(north)&&Number.isFinite(africa))
+   insight('insight-map-waste',`In the published 2022 regional indicator, North America reported ${fmt(north)}% formal e-waste recycling and Africa ${fmt(africa)}%, a gap of ${fmt(north-africa)} percentage points. Regional rates do not describe total waste tonnage.`);
  const old = mapBy(pick(access,2010),'iso'), now=mapBy(pick(access,2024),'iso');
  const dumb=SEA_CODES.filter(iso=>old.has(iso)&&now.has(iso)).map(iso=>({country:SEA[iso],start:old.get(iso).value,end:now.get(iso).value,gain:now.get(iso).value-old.get(iso).value}));
  await embed('dumbbell','04_asean_dumbbell',s=>s.data.values=dumb);
+ if(dumb.length){
+  const leader=dumb.slice().sort((a,b)=>b.gain-a.gain)[0];
+  insight('insight-dumbbell',`Among the ${dumb.length} Southeast Asian countries with observations for both years, ${leader.country} recorded the largest change: +${fmt(leader.gain)} percentage points between 2010 and 2024.`);
+ }
  const matrix=access.filter(r=>SEA[r.iso] && YEARS.includes(r.year)).map(r=>({country:SEA[r.iso],metric:r.value,year:r.year}));
  await embed('heatmap','05_asean_heatmap',s=>s.data.values=matrix);
+ insight('insight-heatmap',`These are five benchmark years (2005, 2010, 2015, 2020 and 2024), not annual data. Compare rows to see whether countries' reported internet-use shares become closer over time.`);
  const densityData=[];
- let cats=['Africa','Asia','Europe','North America','South America','Oceania'];
- const sampled=pick(subs,2024).filter(r=>r.value<=210&&r.value>=0&&meta[r.iso]&&cats.includes(meta[r.iso].continent));
+ let cats=['Africa','Americas','Asia','Europe','Oceania'];
+ const sampled=pick(subs,2024).filter(r=>r.value<=210&&r.value>=0&&meta[r.iso]&&cats.includes(normalizeContinent(meta[r.iso].continent)));
  const kern=(u)=>Math.exp(-.5*u*u)/Math.sqrt(2*Math.PI);
  for(let i=0;i<cats.length;i++){
-  const arr=sampled.filter(r=>meta[r.iso].continent===cats[i]).map(r=>r.value);
+  const arr=sampled.filter(r=>normalizeContinent(meta[r.iso].continent)===cats[i]).map(r=>r.value);
   if(arr.length<4)continue;
   // Vega-Lite trail marks form the two-sided density silhouette without
   // relying on an area mark's baseline / stacking inference.
@@ -96,13 +126,19 @@ async function draw(){
  }
  await embed('violin','06_subscription_violin',s=>{s.data.values=densityData;});
  appendSub('density-count',`${sampled.length} reporting countries, each weighted equally`);
+ const groupMedians=cats.map(name=>({name,m:median(sampled.filter(r=>normalizeContinent(meta[r.iso].continent)===name).map(r=>r.value))})).filter(x=>x.m!=null);
+ if(groupMedians.length){const upper=groupMedians.slice().sort((a,b)=>b.m-a.m)[0];
+  insight('insight-violin',`${upper.name} has the highest median subscription rate in this plotted sample (${fmt(upper.m)} per 100 people). The density excludes values above 210 and is smoothed with a Gaussian kernel (bandwidth 13); country observations carry equal weight.`);
+ }
  const bump=[];
- for(let yy of YEARS){const available=SEA_CODES.map(iso=>pickCode(access,yy,iso)).filter(Boolean).sort((a,b)=>b.value-a.value);available.forEach((r,i)=>bump.push({year:yy,country:SEA[r.iso],rank:i+1,metric:r.value}));}
- await embed('bump','07_asean_bump',s=>s.data.values=bump);
+ const completeSEA=SEA_CODES.filter(iso=>YEARS.every(yy=>Number.isFinite(pickCode(access,yy,iso)?.value)));
+ for(let yy of YEARS){const available=completeSEA.map(iso=>pickCode(access,yy,iso)).sort((a,b)=>b.value-a.value);available.forEach((r,i)=>bump.push({year:yy,country:SEA[r.iso],rank:i+1,metric:r.value}));}
+ await embed('bump','07_asean_bump',s=>{s.data.values=bump; s.encoding.y.scale.domain=[Math.max(completeSEA.length,1)+0.5,0.5];});
+ insight('insight-bump',`Rankings compare the same ${completeSEA.length} countries with valid observations in all five benchmark years. Rank 1 means the highest internet-use share within that fixed group, not worldwide.`);
  // A self-contained 2023 treemap: internet-user estimate = 2023 population x 2023 internet share.
  const ip=mapBy(pick(access,2023),'iso');
  const pop=pick(population,2023).filter(r=>r.iso.length===3 && ip.has(r.iso) && r.value>0 && meta[r.iso] && meta[r.iso].continent);
- const countryP=pop.map(r=>({country:r.country,continent:meta[r.iso].continent,connected:Math.round(r.value*ip.get(r.iso).value/100),penetration:ip.get(r.iso).value})).filter(r=>r.connected>0).sort((a,b)=>b.connected-a.connected).slice(0,32);
+ const countryP=pop.map(r=>({country:r.country,continent:normalizeContinent(meta[r.iso].continent),connected:Math.round(r.value*ip.get(r.iso).value/100),penetration:ip.get(r.iso).value})).filter(r=>r.connected>0).sort((a,b)=>b.connected-a.connected).slice(0,32);
  if(countryP.length){
     const grouped=d3.group(countryP,d=>d.continent);
     const tree=d3.hierarchy({name:'Connected populations',children:[...grouped].map(([name,values])=>({name,children:values}))}).sum(d=>d.connected||0);
@@ -111,12 +147,27 @@ async function draw(){
     await embed('treemap','08_connected_treemap',s=>s.data.values=treedata);
  } else await embed('treemap','08_connected_treemap',s=>s.data.values=[]);
  appendSub('treemap-count',`${countryP.length} countries with paired 2023 observations`);
+ if(countryP.length){
+  const top=countryP[0];
+  insight('insight-treemap',`${top.country} has the largest estimated connected population among the 32 countries shown (approximately ${fmt(top.connected/1e6)} million in 2023). Rectangle sizes are estimates based on population multiplied by internet-use percentage.`);
+ }
  const subsMap=mapBy(pick(subs,2024),'iso');
  const scatter=pick(access,2024).filter(r=>subsMap.has(r.iso)&&meta[r.iso]?.geo_id && r.iso.length===3 && subsMap.get(r.iso).value<250)
  .map(r=>({country:r.country,iso:r.iso,internet:r.value,subscriptions:subsMap.get(r.iso).value}));
  await embed('scatter','09_subscriptions_vs_access',s=>s.data.values=scatter);
  appendSub('scatter-count',`${scatter.length} countries with both indicators`);
+ const myScatter=scatter.find(r=>r.iso==='MYS');
+ if(myScatter)insight('insight-scatter',`Malaysia appears at ${fmt(myScatter.subscriptions)} mobile subscriptions per 100 people and ${fmt(myScatter.internet)}% internet use in 2024. The two measurements have different denominators and are not interchangeable.`);
  await embed('vendors','13_vendor_matrix',s=>{s.data.values=state.vendors;});
+ const vendorMatch=vendorPairs(state.vendors);
+ await embed('vendor-contrast','14_vendor_slope',s=>{s.data.values=vendorMatch.flatMap(r=>[
+   {vendor:r.vendor,market:'Malaysia',share:r.malaysia},
+   {vendor:r.vendor,market:'Worldwide',share:r.worldwide}
+ ]);});
+ appendSub('vendor-pair-count',`${vendorMatch.length} vendors reported in both top-six lists`);
+ const apple=vendorMatch.find(r=>r.vendor==='Apple');
+ if(apple)insight('insight-vendors',`Apple accounted for ${fmt(apple.malaysia)}% of measured mobile browsing in Malaysia versus ${fmt(apple.worldwide)}% worldwide in September 2026, a gap of ${fmt(apple.gap)} percentage points. This is browsing share, not shipment share or buying preferences.`);
+ insight('insight-vendor-contrast',`Only vendors appearing in BOTH published top-six lists are paired. A missing vendor is not assigned zero. The slope connects two markets in the same month; it does not represent a change over time.`);
  let worldWaste=pickCountry(waste,2022,'World')?.value;
  let waffle=[];
  if(Number.isFinite(worldWaste)){
@@ -124,11 +175,13 @@ async function draw(){
  }
  await embed('waffle','10_recycling_waffle',s=>s.data.values=waffle);
  setText('waffle-note',Number.isFinite(worldWaste)?`The tiles round ${fmt(worldWaste)}% to the nearest whole tile; the original figure is shown above. The remainder does not necessarily mean landfill disposal.`:'World total is unavailable from the source.');
- const preferred=['DEU','FRA','GBR','USA','CAN','AUS','JPN','CHN','IND','IDN','BRA','ZAF','NLD','SWE','POL','KOR','MYS','THA','ITA','ESP'];
- const wasteCountries = pick(waste, 2022).filter(r => r.iso.length === 3 && meta[r.iso]?.geo_id != null).map(r => ({
-     country: r.country, rate: r.value})).sort((a, b) => b.rate - a.rate).slice(0, 14);
+ // Show every country with a reported observation, up to 14, rather than a predefined shortlist.
+ // The source's sparse coverage is clearly disclosed below the ranking.
+ const wasteCountries=pick(waste,2022).filter(r=>r.iso.length===3&&meta[r.iso]?.geo_id!=null&&r.value<=100)
+   .map(r=>({country:r.country,rate:r.value})).sort((a,b)=>b.rate-a.rate).slice(0,14);
  await embed('waste-ranking','11_waste_country_ranking',s=>s.data.values=wasteCountries);
- appendSub('waste-country-count', `${wasteCountries.length} reporting countries shown (2022); ranked by recycling rate`);
+ appendSub('waste-country-count',`${wasteCountries.length} reporting countries shown (2022); incomplete coverage`);
+ insight('insight-waste-ranking',`Only ${wasteCountries.length} reporting countries appear in this view; missing countries are omitted, not assigned zero. A reported 100% value refers to the published indicator and should not be interpreted as independently verified recovery of every discarded device.`);
  const trajCodes=['MYS','SGP','IDN','VNM','PHL'];
  const trajectories=access.filter(r=>r.year>=2005&&r.year<=2024&&(trajCodes.includes(r.iso)||r.country==='World'))
  .map(r=>({country:r.country==='World'?'World':SEA[r.iso],year:r.year,metric:r.value}));
@@ -149,7 +202,18 @@ async function boot(){
    state.access=parseDataset(accessText);state.subs=parseDataset(subsText);state.waste=parseDataset(wasteText);state.population=parseDataset(popText);state.vendors=d3.csvParse(vendorCSV).map(d=>({...d,Share:+d.Share}));state.meta=meta;
    if(!state.access.length || !state.subs.length || !state.waste.length)throw Error('At least one source returned zero valid observations');
    const picker=document.getElementById('year-picker');
-   picker.onchange=async ev=>{state.year=Number(ev.target.value);setText('access-year',state.year);document.getElementById('map-access').innerHTML='<span class="loading">Updating map…</span>';await embed('map-access','01_internet_choropleth',s=>{s.transform[0].from.data.values=filterIso(state.access,state.year).map(r=>({geo_id:meta[r.iso].geo_id,metric:r.value,country:r.country,year:r.year}));});};
+   picker.onchange=async ev=>{
+     state.year=Number(ev.target.value);setText('access-year',state.year);
+     const mapped=filterIso(state.access,state.year).map(r=>({geo_id:meta[r.iso].geo_id,metric:r.value,country:r.country,year:r.year}));
+     document.getElementById('map-access').innerHTML='<span class="loading">Updating map…</span>';
+     await embed('map-access','01_internet_choropleth',s=>{s.transform[0].from.data.values=mapped;});
+     labelData('access',mapped.length);
+     const local=pickCode(state.access,state.year,'MYS')?.value;
+     const worldwide=pickCountry(state.access,state.year,'World')?.value;
+     insight('insight-map-access',Number.isFinite(local)&&Number.isFinite(worldwide)
+        ?`In ${state.year}, Malaysia reported ${fmt(local)}% internet use compared with ${fmt(worldwide)}% worldwide — a difference of ${fmt(local-worldwide)} percentage points. The map measures access, not phone sales.`
+        :`${mapped.length} countries have mapped observations for ${state.year}; uncoloured countries have no reported match.`);
+   };
    await draw();
  } catch(err){console.error(err);setText('status','Dataset connection failed: '+err.message);sectionError();try{const t=await getText('data/vendors_2026_09.csv');await embed('vendors','13_vendor_matrix',s=>{s.data.values=d3.csvParse(t).map(r=>({...r,Share:+r.Share}));});}catch(_){} }
 }
