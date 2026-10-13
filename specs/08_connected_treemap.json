@@ -86,22 +86,39 @@
         "orient": "bottom"
       },
       "scale": {
-        "scheme": "tableau10"
-      }
+        "domain": [
+          "Africa",
+          "Americas",
+          "Asia",
+          "Europe",
+          "Oceania"
+        ],
+        "range": [
+          "#8a9e8a",
+          "#d1a17d",
+          "#3a8290",
+          "#6f9da2",
+          "#b1a4ad"
+        ]
+      },
+      "title": "Continent"
     },
     "tooltip": [
       {
-        "field": "country"
+        "field": "country",
+        "type": "nominal"
       },
       {
         "field": "connected",
         "title": "Estimated internet users",
-        "format": ",.0f"
+        "format": ",.0f",
+        "type": "quantitative"
       },
       {
         "field": "penetration",
         "title": "Internet use (%)",
-        "format": ".1f"
+        "format": ".1f",
+        "type": "quantitative"
       }
     ]
   }

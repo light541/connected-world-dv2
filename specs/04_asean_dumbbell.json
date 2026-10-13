@@ -99,12 +99,14 @@
         },
         "tooltip": [
           {
-            "field": "country"
+            "field": "country",
+            "type": "nominal"
           },
           {
             "field": "start",
             "title": "2010 (%)",
-            "format": ".1f"
+            "format": ".1f",
+            "type": "quantitative"
           }
         ]
       }
@@ -131,17 +133,20 @@
         },
         "tooltip": [
           {
-            "field": "country"
+            "field": "country",
+            "type": "nominal"
           },
           {
             "field": "end",
             "title": "2024 (%)",
-            "format": ".1f"
+            "format": ".1f",
+            "type": "quantitative"
           },
           {
             "field": "gain",
             "title": "Change (pp)",
-            "format": "+.1f"
+            "format": "+.1f",
+            "type": "quantitative"
           }
         ]
       }

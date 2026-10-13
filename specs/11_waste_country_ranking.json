@@ -106,8 +106,7 @@
         "tooltip": [
           {
             "field": "country",
-            "type": "nominal",
-            "title": "Country"
+            "type": "nominal"
           },
           {
             "field": "rate",

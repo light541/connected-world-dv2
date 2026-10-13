@@ -68,7 +68,7 @@
       "scale": {
         "domain": [
           -0.5,
-          5.5
+          4.5
         ]
       },
       "axis": {
@@ -77,10 +77,9 @@
           1,
           2,
           3,
-          4,
-          5
+          4
         ],
-        "labelExpr": "['Africa','Asia','Europe','N. America','S. America','Oceania'][datum.value]",
+        "labelExpr": "['Africa','Americas','Asia','Europe','Oceania'][datum.value]",
         "grid": false
       }
     },
@@ -91,31 +90,31 @@
       "scale": {
         "domain": [
           "Africa",
+          "Americas",
           "Asia",
           "Europe",
-          "North America",
-          "South America",
           "Oceania"
         ],
         "range": [
-          "#78917c",
+          "#829987",
+          "#c4a18d",
           "#24566b",
-          "#77a9ac",
-          "#b49a76",
-          "#6390b0",
-          "#c0a1a0"
+          "#6c9fa1",
+          "#b7a8af"
         ]
       }
     },
     "tooltip": [
       {
         "field": "continent",
-        "title": "Region"
+        "title": "Region",
+        "type": "nominal"
       },
       {
         "field": "value",
         "title": "Subscriptions / 100",
-        "format": ".0f"
+        "format": ".0f",
+        "type": "quantitative"
       }
     ],
     "size": {

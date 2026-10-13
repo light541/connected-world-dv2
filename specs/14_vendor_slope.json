@@ -1,0 +1,183 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": null,
+  "config": {
+    "font": "Inter, Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "domain": false,
+      "gridColor": "#e6ebef",
+      "gridOpacity": 0.8,
+      "labelColor": "#50606e",
+      "titleColor": "#334450",
+      "tickColor": "#d6dee4",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titlePadding": 12
+    },
+    "legend": {
+      "labelColor": "#445563",
+      "titleColor": "#334450",
+      "labelFontSize": 11,
+      "titleFontSize": 11
+    },
+    "title": {
+      "color": "#182d3a",
+      "fontSize": 15
+    },
+    "range": {
+      "category": [
+        "#24566b",
+        "#77a9ac",
+        "#b49a76",
+        "#6390b0",
+        "#78917c",
+        "#c0a1a0",
+        "#5f7485"
+      ]
+    }
+  },
+  "width": "container",
+  "height": 285,
+  "data": {
+    "values": []
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "line",
+        "strokeWidth": 2.5,
+        "opacity": 0.88
+      },
+      "encoding": {
+        "x": {
+          "field": "market",
+          "type": "ordinal",
+          "title": null,
+          "sort": [
+            "Malaysia",
+            "Worldwide"
+          ],
+          "axis": {
+            "labelAngle": 0,
+            "labelFontSize": 12,
+            "labelPadding": 9
+          }
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative",
+          "title": "Share of observed mobile browsing (%)",
+          "scale": {
+            "domain": [
+              0,
+              60
+            ]
+          }
+        },
+        "color": {
+          "field": "vendor",
+          "type": "nominal",
+          "legend": {
+            "orient": "bottom",
+            "title": null,
+            "columns": 5
+          },
+          "scale": {
+            "domain": [
+              "Apple",
+              "Samsung",
+              "Xiaomi",
+              "Oppo",
+              "Vivo"
+            ],
+            "range": [
+              "#234f65",
+              "#8a9ea9",
+              "#c19078",
+              "#6e9993",
+              "#9b8eac"
+            ]
+          }
+        },
+        "detail": {
+          "field": "vendor",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 75,
+        "stroke": "#fff",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "market",
+          "type": "ordinal",
+          "sort": [
+            "Malaysia",
+            "Worldwide"
+          ],
+          "axis": {
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "share",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              60
+            ]
+          }
+        },
+        "color": {
+          "field": "vendor",
+          "type": "nominal",
+          "legend": null,
+          "scale": {
+            "domain": [
+              "Apple",
+              "Samsung",
+              "Xiaomi",
+              "Oppo",
+              "Vivo"
+            ],
+            "range": [
+              "#234f65",
+              "#8a9ea9",
+              "#c19078",
+              "#6e9993",
+              "#9b8eac"
+            ]
+          }
+        },
+        "tooltip": [
+          {
+            "field": "vendor",
+            "type": "nominal",
+            "title": "Brand"
+          },
+          {
+            "field": "market",
+            "type": "nominal",
+            "title": "Market"
+          },
+          {
+            "field": "share",
+            "type": "quantitative",
+            "title": "Browsing share (%)",
+            "format": ".2f"
+          }
+        ]
+      }
+    }
+  ]
+}

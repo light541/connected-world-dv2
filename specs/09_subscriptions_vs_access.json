@@ -79,17 +79,20 @@
         },
         "tooltip": [
           {
-            "field": "country"
+            "field": "country",
+            "type": "nominal"
           },
           {
             "field": "internet",
             "title": "Internet access (%)",
-            "format": ".1f"
+            "format": ".1f",
+            "type": "quantitative"
           },
           {
             "field": "subscriptions",
             "title": "Subs / 100",
-            "format": ".1f"
+            "format": ".1f",
+            "type": "quantitative"
           }
         ]
       }

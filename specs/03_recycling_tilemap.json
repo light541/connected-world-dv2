@@ -80,16 +80,19 @@
     "tooltip": [
       {
         "field": "region",
-        "title": "Region"
+        "title": "Region",
+        "type": "nominal"
       },
       {
         "field": "rate",
         "title": "Recycling rate (%)",
-        "format": ".1f"
+        "format": ".1f",
+        "type": "quantitative"
       },
       {
         "field": "year",
-        "title": "Year"
+        "title": "Year",
+        "type": "quantitative"
       }
     ]
   }

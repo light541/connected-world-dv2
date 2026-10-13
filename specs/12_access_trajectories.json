@@ -105,15 +105,18 @@
     },
     "tooltip": [
       {
-        "field": "country"
+        "field": "country",
+        "type": "nominal"
       },
       {
-        "field": "year"
+        "field": "year",
+        "type": "quantitative"
       },
       {
         "field": "metric",
         "title": "Internet users (%)",
-        "format": ".1f"
+        "format": ".1f",
+        "type": "quantitative"
       }
     ]
   }
