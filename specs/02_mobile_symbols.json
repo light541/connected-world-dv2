@@ -1,0 +1,121 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": null,
+  "config": {
+    "font": "Inter, Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "domain": false,
+      "gridColor": "#e6ebef",
+      "gridOpacity": 0.8,
+      "labelColor": "#50606e",
+      "titleColor": "#334450",
+      "tickColor": "#d6dee4",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titlePadding": 12
+    },
+    "legend": {
+      "labelColor": "#445563",
+      "titleColor": "#334450",
+      "labelFontSize": 11,
+      "titleFontSize": 11
+    },
+    "title": {
+      "color": "#182d3a",
+      "fontSize": 15
+    },
+    "range": {
+      "category": [
+        "#24566b",
+        "#77a9ac",
+        "#b49a76",
+        "#6390b0",
+        "#78917c",
+        "#c0a1a0",
+        "#5f7485"
+      ]
+    }
+  },
+  "width": "container",
+  "height": 380,
+  "projection": {
+    "type": "equalEarth"
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2/data/world-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e9eeed",
+        "stroke": "#fff",
+        "strokeWidth": 0.45
+      }
+    },
+    {
+      "data": {
+        "values": []
+      },
+      "mark": {
+        "type": "circle",
+        "opacity": 0.68,
+        "stroke": "#f8faf9",
+        "strokeWidth": 0.7
+      },
+      "encoding": {
+        "longitude": {
+          "field": "lon",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "lat",
+          "type": "quantitative"
+        },
+        "size": {
+          "field": "metric",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              200
+            ],
+            "range": [
+              15,
+              550
+            ]
+          },
+          "legend": {
+            "title": "Subscriptions per 100 people",
+            "orient": "bottom"
+          }
+        },
+        "color": {
+          "value": "#23677a"
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "title": "Country"
+          },
+          {
+            "field": "metric",
+            "title": "Subscriptions / 100",
+            "format": ".1f"
+          },
+          {
+            "field": "year",
+            "title": "Year"
+          }
+        ]
+      }
+    }
+  ]
+}

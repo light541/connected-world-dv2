@@ -1,0 +1,146 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": null,
+  "config": {
+    "font": "Inter, Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "domain": false,
+      "gridColor": "#e6ebef",
+      "gridOpacity": 0.8,
+      "labelColor": "#50606e",
+      "titleColor": "#334450",
+      "tickColor": "#d6dee4",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titlePadding": 12
+    },
+    "legend": {
+      "labelColor": "#445563",
+      "titleColor": "#334450",
+      "labelFontSize": 11,
+      "titleFontSize": 11
+    },
+    "title": {
+      "color": "#182d3a",
+      "fontSize": 15
+    },
+    "range": {
+      "category": [
+        "#24566b",
+        "#77a9ac",
+        "#b49a76",
+        "#6390b0",
+        "#78917c",
+        "#c0a1a0",
+        "#5f7485"
+      ]
+    }
+  },
+  "width": "container",
+  "height": 328,
+  "data": {
+    "values": []
+  },
+  "mark": {
+    "type": "trail",
+    "opacity": 0.86,
+    "strokeCap": "round"
+  },
+  "encoding": {
+    "x": {
+      "field": "value",
+      "type": "quantitative",
+      "title": "Subscriptions per 100 people (2024)",
+      "scale": {
+        "domain": [
+          0,
+          210
+        ]
+      }
+    },
+    "y": {
+      "field": "row",
+      "type": "quantitative",
+      "title": null,
+      "scale": {
+        "domain": [
+          -0.5,
+          5.5
+        ]
+      },
+      "axis": {
+        "values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "labelExpr": "['Africa','Asia','Europe','N. America','S. America','Oceania'][datum.value]",
+        "grid": false
+      }
+    },
+    "color": {
+      "field": "continent",
+      "type": "nominal",
+      "legend": null,
+      "scale": {
+        "domain": [
+          "Africa",
+          "Asia",
+          "Europe",
+          "North America",
+          "South America",
+          "Oceania"
+        ],
+        "range": [
+          "#78917c",
+          "#24566b",
+          "#77a9ac",
+          "#b49a76",
+          "#6390b0",
+          "#c0a1a0"
+        ]
+      }
+    },
+    "tooltip": [
+      {
+        "field": "continent",
+        "title": "Region"
+      },
+      {
+        "field": "value",
+        "title": "Subscriptions / 100",
+        "format": ".0f"
+      }
+    ],
+    "size": {
+      "field": "thickness",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          38
+        ],
+        "range": [
+          0,
+          38
+        ]
+      },
+      "legend": null
+    },
+    "detail": {
+      "field": "continent",
+      "type": "nominal"
+    },
+    "order": {
+      "field": "value",
+      "type": "quantitative",
+      "sort": "ascending"
+    }
+  }
+}

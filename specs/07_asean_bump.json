@@ -1,0 +1,142 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": null,
+  "config": {
+    "font": "Inter, Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "domain": false,
+      "gridColor": "#e6ebef",
+      "gridOpacity": 0.8,
+      "labelColor": "#50606e",
+      "titleColor": "#334450",
+      "tickColor": "#d6dee4",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titlePadding": 12
+    },
+    "legend": {
+      "labelColor": "#445563",
+      "titleColor": "#334450",
+      "labelFontSize": 11,
+      "titleFontSize": 11
+    },
+    "title": {
+      "color": "#182d3a",
+      "fontSize": 15
+    },
+    "range": {
+      "category": [
+        "#24566b",
+        "#77a9ac",
+        "#b49a76",
+        "#6390b0",
+        "#78917c",
+        "#c0a1a0",
+        "#5f7485"
+      ]
+    }
+  },
+  "width": "container",
+  "height": 340,
+  "data": {
+    "values": []
+  },
+  "mark": {
+    "type": "line",
+    "point": {
+      "filled": true,
+      "size": 45
+    },
+    "strokeWidth": 2.5
+  },
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "ordinal",
+      "title": "Year",
+      "axis": {
+        "labelAngle": 0
+      }
+    },
+    "y": {
+      "field": "rank",
+      "type": "quantitative",
+      "title": "Position among compared countries",
+      "scale": {
+        "domain": [
+          11.5,
+          0.5
+        ]
+      },
+      "axis": {
+        "values": [
+          1,
+          3,
+          5,
+          7,
+          9,
+          11
+        ]
+      }
+    },
+    "color": {
+      "field": "country",
+      "type": "nominal",
+      "legend": {
+        "orient": "bottom",
+        "columns": 5
+      },
+      "scale": {
+        "domain": [
+          "Malaysia",
+          "Singapore",
+          "Thailand",
+          "Indonesia",
+          "Vietnam",
+          "Philippines",
+          "Cambodia",
+          "Laos",
+          "Myanmar",
+          "Brunei",
+          "Timor-Leste"
+        ],
+        "range": [
+          "#d27f53",
+          "#244f68",
+          "#82aba8",
+          "#a8b7b8",
+          "#9fae87",
+          "#8c99bb",
+          "#bea5a2",
+          "#b1a18a",
+          "#90aeb6",
+          "#76938c",
+          "#cbbdad"
+        ]
+      }
+    },
+    "detail": {
+      "field": "country"
+    },
+    "tooltip": [
+      {
+        "field": "country"
+      },
+      {
+        "field": "year"
+      },
+      {
+        "field": "rank",
+        "title": "Rank"
+      },
+      {
+        "field": "metric",
+        "title": "Internet users (%)",
+        "format": ".1f"
+      }
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": null,
+  "config": {
+    "font": "Inter, Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "domain": false,
+      "gridColor": "#e6ebef",
+      "gridOpacity": 0.8,
+      "labelColor": "#50606e",
+      "titleColor": "#334450",
+      "tickColor": "#d6dee4",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titlePadding": 12
+    },
+    "legend": {
+      "labelColor": "#445563",
+      "titleColor": "#334450",
+      "labelFontSize": 11,
+      "titleFontSize": 11
+    },
+    "title": {
+      "color": "#182d3a",
+      "fontSize": 15
+    },
+    "range": {
+      "category": [
+        "#24566b",
+        "#77a9ac",
+        "#b49a76",
+        "#6390b0",
+        "#78917c",
+        "#c0a1a0",
+        "#5f7485"
+      ]
+    }
+  },
+  "width": "container",
+  "height": 325,
+  "data": {
+    "values": []
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "stroke": "#bed3d6",
+        "strokeWidth": 4
+      },
+      "encoding": {
+        "y": {
+          "field": "country",
+          "type": "nominal",
+          "sort": {
+            "field": "end",
+            "order": "descending"
+          },
+          "title": null
+        },
+        "x": {
+          "field": "start",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          },
+          "title": "People using internet (%)"
+        },
+        "x2": {
+          "field": "end"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 87,
+        "color": "#b1bac2"
+      },
+      "encoding": {
+        "y": {
+          "field": "country",
+          "type": "nominal",
+          "sort": {
+            "field": "end",
+            "order": "descending"
+          }
+        },
+        "x": {
+          "field": "start",
+          "type": "quantitative"
+        },
+        "tooltip": [
+          {
+            "field": "country"
+          },
+          {
+            "field": "start",
+            "title": "2010 (%)",
+            "format": ".1f"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 115,
+        "color": "#207080"
+      },
+      "encoding": {
+        "y": {
+          "field": "country",
+          "type": "nominal",
+          "sort": {
+            "field": "end",
+            "order": "descending"
+          }
+        },
+        "x": {
+          "field": "end",
+          "type": "quantitative"
+        },
+        "tooltip": [
+          {
+            "field": "country"
+          },
+          {
+            "field": "end",
+            "title": "2024 (%)",
+            "format": ".1f"
+          },
+          {
+            "field": "gain",
+            "title": "Change (pp)",
+            "format": "+.1f"
+          }
+        ]
+      }
+    }
+  ]
+}

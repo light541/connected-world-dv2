@@ -1,0 +1,120 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "background": null,
+  "config": {
+    "font": "Inter, Arial, sans-serif",
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "domain": false,
+      "gridColor": "#e6ebef",
+      "gridOpacity": 0.8,
+      "labelColor": "#50606e",
+      "titleColor": "#334450",
+      "tickColor": "#d6dee4",
+      "labelFontSize": 11,
+      "titleFontSize": 12,
+      "titlePadding": 12
+    },
+    "legend": {
+      "labelColor": "#445563",
+      "titleColor": "#334450",
+      "labelFontSize": 11,
+      "titleFontSize": 11
+    },
+    "title": {
+      "color": "#182d3a",
+      "fontSize": 15
+    },
+    "range": {
+      "category": [
+        "#24566b",
+        "#77a9ac",
+        "#b49a76",
+        "#6390b0",
+        "#78917c",
+        "#c0a1a0",
+        "#5f7485"
+      ]
+    }
+  },
+  "width": "container",
+  "height": 310,
+  "data": {
+    "values": []
+  },
+  "mark": {
+    "type": "line",
+    "strokeWidth": 2.6
+  },
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "quantitative",
+      "title": "Year",
+      "scale": {
+        "domain": [
+          2005,
+          2024
+        ]
+      },
+      "axis": {
+        "format": "d",
+        "tickCount": 5
+      }
+    },
+    "y": {
+      "field": "metric",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          100
+        ]
+      },
+      "title": "People using internet (%)"
+    },
+    "color": {
+      "field": "country",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Malaysia",
+          "Singapore",
+          "Indonesia",
+          "Vietnam",
+          "Philippines",
+          "World"
+        ],
+        "range": [
+          "#ce7e53",
+          "#24566b",
+          "#7f9895",
+          "#91a5bd",
+          "#a19a89",
+          "#a4a8ad"
+        ]
+      },
+      "legend": {
+        "orient": "bottom"
+      }
+    },
+    "detail": {
+      "field": "country"
+    },
+    "tooltip": [
+      {
+        "field": "country"
+      },
+      {
+        "field": "year"
+      },
+      {
+        "field": "metric",
+        "title": "Internet users (%)",
+        "format": ".1f"
+      }
+    ]
+  }
+}
