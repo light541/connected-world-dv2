@@ -1,0 +1,25 @@
+Entity,Code,Year,Proportion of electronic waste recycled (%)
+Africa (UN),UN_AFR,2022,0.71
+Asia (UN),UN_ASI,2022,11.84
+Australia and New Zealand (UN SDG),UNSDG_ANZ,2022,42.76
+Belarus,BLR,2022,26.82
+Canada,CAN,2022,20.58
+Central and Southern Asia (UN SDG),UNSDG_CSA,2022,1.11
+Costa Rica,CRI,2022,8.47
+Eastern and South-Eastern Asia (UN SDG),UNSDG_ESEA,2022,15.62
+Europe (UN),UN_EUR,2022,42.77
+Europe and Northern America (UN SDG),UNSDG_ENA,2022,46.31
+Honduras,HND,2022,14.39
+Iran,IRN,2022,100
+Israel,ISR,2022,50.36
+Japan,JPN,2022,22.9
+Latin America and the Caribbean (UN SDG),UNSDG_LAC,2022,2.75
+Latin America and the Caribbean (UN),UN_LAC,2022,2.75
+Least Developed Countries (LDCs),,2022,0.15
+Mongolia,MNG,2022,100
+Northern Africa and Western Asia (UN SDG),UNSDG_NAWA,2022,6.08
+Northern America (UN),UN_NAM,2022,52.13
+Oceania (UN),UN_OCE,2022,41.35
+Small Island Developing States (SIDS),,2022,0.05
+Sub-Saharan Africa (UN SDG),UNSDG_SSA,2022,1.23
+World,OWID_WRL,2022,22.3
