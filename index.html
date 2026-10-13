@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="A data story about consumer electronics: internet access, mobile subscriptions, mobile brand visibility, and electronic waste around the world." />
+  <title>The Connected World | Consumer Electronics</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/d3-dsv@3/dist/d3-dsv.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/d3-array@3/dist/d3-array.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/d3-hierarchy@3/dist/d3-hierarchy.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/vega@5/build/vega.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/vega-lite@5/build/vega-lite.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/vega-embed@6/build/vega-embed.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="container"><div class="wordmark">THE CONNECTED WORLD <span style="color:#b28a70">/ 2026</span></div><nav class="toplinks" aria-label="Sections"><a href="#access">Access</a><a href="#adoption">Adoption</a><a href="#brands">Brands</a><a href="#afterlife">Afterlife</a><a href="#sources">Sources</a></nav></div></header>
+  <main class="container">
+    <section class="hero" aria-labelledby="main-title">
+      <div><div class="eyebrow">A global perspective on consumer electronics</div><h1 id="main-title">The connected<br><em>world.</em></h1><div class="divider-line"></div><p class="lead">Small devices. Enormous reach. From internet access to mobile subscriptions and the electronic waste they leave behind, the geography of consumer technology tells a story of opportunity and inequality.</p></div>
+      <aside><b>Four questions, one connected story.</b>Who can get online? How widespread is cellular service? Which vendors lead in different markets? And what happens to the resulting electronic waste?<p style="font-size:11px">A public-interest visual essay for a Malaysian audience. Data years are labelled separately because the underlying statistics are published at different intervals.</p></aside>
+    </section>
+    <div class="kpis" aria-label="Key published indicators">
+      <div class="kpi"><div class="kpi-label">Internet users · world · 2024</div><div class="kpi-val" id="kpi-access">—</div><small>Share of individuals using the internet</small></div>
+      <div class="kpi"><div class="kpi-label">Mobile subscriptions · world · 2024</div><div class="kpi-val" id="kpi-mobile">—</div><small>Active cellular subscriptions per 100 people</small></div>
+      <div class="kpi"><div class="kpi-label">E-waste formally recycled · world · 2022</div><div class="kpi-val" id="kpi-waste">—</div><small>Share of electronic waste formally recycled</small></div>
+    </div>
+
+    <section class="chapter" id="access">
+      <span class="section-number">CHAPTER 01 / ACCESS</span><h2>Connectivity has a geography.</h2>
+      <p class="chapter-intro">A connected device is only useful when a network is within reach. The share of people using the internet provides a broad measure of connectivity, although it does not specifically measure smartphone ownership.</p>
+      <div class="figure-grid">
+        <article class="chart-card wide"><div class="chart-heading"><span class="chart-number">FIGURE 01 · CHOROPLETH MAP</span><span class="small-pill">Interactive</span></div><h3>Where are people getting online?</h3><p class="desc">Country-level internet use, expressed as a percentage of the population. White/uncoloured areas indicate no observation for the selected year.</p>
+          <div class="controls"><label for="year-picker">Change map year</label><select id="year-picker"><option>2024</option><option>2020</option><option>2015</option><option>2010</option></select><span>Showing <b id="access-year">2024</b></span></div>
+          <div class="visual" id="map-access"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank via OWID</span><span data-count="access">Country coverage loading</span></div>
+        </article>
+        <article class="chart-card"><div class="chart-heading"><span class="chart-number">FIGURE 02 · DUMBBELL PLOT</span></div><h3>How far has Southeast Asia come?</h3><p class="desc">A pair of dots makes a country’s change in internet use from 2010 (grey) to 2024 (teal) visible at a glance. Countries without both years are omitted.</p><div class="visual" id="dumbbell"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank</span><span>Percentage point change</span></div></article>
+        <article class="chart-card"><div class="chart-heading"><span class="chart-number">FIGURE 03 · HEATMAP</span></div><h3>The long transition online</h3><p class="desc">Each cell compares a reported country-year, from 2005 to 2024. Unreported combinations remain blank; missing values are never interpolated.</p><div class="visual" id="heatmap"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank</span><span>10+ years of comparison</span></div></article>
+        <article class="chart-card wide"><div class="chart-heading"><span class="chart-number">FIGURE 04 · LONGITUDINAL LINES</span></div><h3>Malaysia and its neighbours, across two decades</h3><p class="desc">Country trajectories can converge in the present despite beginning at very different levels of internet access.</p><div class="visual" id="trajectories"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank</span><span>Annual observations, 2005–2024</span></div></article>
+      </div>
+      <p class="chapter-note"><strong>Malaysia in focus.</strong> <span id="malaysia-insight">Reading published observations…</span> Internet use is not restricted to mobile devices.</p>
+    </section>
+
+    <section class="chapter" id="adoption">
+      <span class="section-number">CHAPTER 02 / MOBILE ADOPTION</span><h2>More connections than people?</h2>
+      <p class="chapter-intro">Cellular subscriptions reflect service accounts, not unique handsets or owners. A country can have more than 100 subscriptions for every 100 residents because people may maintain multiple active subscriptions.</p>
+      <div class="figure-grid">
+        <article class="chart-card wide"><div class="chart-heading"><span class="chart-number">FIGURE 05 · PROPORTIONAL-SYMBOL MAP</span></div><h3>Cellular connectivity around the world</h3><p class="desc">Circle area encodes mobile subscriptions per 100 people in 2024, positioned at approximate country reference coordinates. Circle size represents a rate, not total device sales.</p><div class="visual" id="map-subs"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank</span><span data-count="subs">Country coverage loading</span></div></article>
+        <article class="chart-card"><div class="chart-heading"><span class="chart-number">FIGURE 06 · VIOLIN DISTRIBUTION</span></div><h3>How typical is a typical country?</h3><p class="desc">Distribution of subscription rates by continent in 2024. Width represents the estimated density of country observations; each reporting country carries equal weight.</p><div class="visual" id="violin"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank</span><span id="density-count">Country coverage loading</span></div></article>
+        <article class="chart-card"><div class="chart-heading"><span class="chart-number">FIGURE 07 · BUMP CHART</span></div><h3>Leaders do not always stay leaders</h3><p class="desc">Ranking Southeast Asian countries by reported internet use within this comparison group. A lower rank number indicates more widespread use; rank is not absolute performance.</p><div class="visual" id="bump"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank</span><span>Missing-country years change the comparison group</span></div></article>
+        <article class="chart-card"><div class="chart-heading"><span class="chart-number">FIGURE 08 · RELATIONSHIP PLOT</span></div><h3>Subscriptions and access are not equivalent</h3><p class="desc">Country observations in 2024 reveal the relationship between number of cellular subscriptions and internet participation. Malaysia is highlighted; correlation does not imply causation.</p><div class="visual" id="scatter"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank</span><span id="scatter-count">Country coverage loading</span></div></article>
+        <article class="chart-card"><div class="chart-heading"><span class="chart-number">FIGURE 09 · TREEMAP</span></div><h3>Where do the connected millions live?</h3><p class="desc">Each rectangle represents the estimated number of people using the internet in a country (2023 population × 2023 internet-use rate). Only the 32 largest paired estimates appear; area represents people, not market revenue.</p><div class="visual" id="treemap"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>ITU / World Bank + UN population estimates</span><span id="treemap-count">Country coverage loading</span></div></article>
+      </div>
+    </section>
+
+    <section class="chapter" id="brands">
+      <span class="section-number">CHAPTER 03 / BRAND CHOICE</span><h2>Not every market chooses alike.</h2>
+      <p class="chapter-intro">Device vendors differ across regions. Statcounter measures mobile web-browsing share attributed to each vendor, offering a useful — but imperfect — view of phones in active use. These percentages are not units sold, survey preferences, or customer ratings.</p>
+      <div class="figure-grid">
+        <article class="chart-card wide"><div class="chart-heading"><span class="chart-number">FIGURE 10 · VENDOR × MARKET MATRIX</span></div><h3>Which mobile brands appear most often in web traffic?</h3><p class="desc">September 2026. Each market lists only its six leading reported device vendors. An empty cell means the vendor was not listed in that market’s top six — not that it has zero share. The “Unknown” category remains visible rather than reassigned to brands.</p><div class="visual" id="vendors"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>Statcounter Global Stats · original mobile-browsing data</span><span>36 published leading-vendor observations · September 2026</span></div></article>
+      </div>
+      <p class="chapter-note"><strong>A Malaysia-first comparison.</strong> The brand pattern in Malaysia should be read against India, Asia, Europe, the United States and the world. It describes measured browsing share, not proof of why a consumer chose a phone.</p>
+    </section>
+
+    <section class="chapter" id="afterlife">
+      <span class="section-number">CHAPTER 04 / THE AFTERLIFE</span><h2>The other side of consumption.</h2>
+      <p class="chapter-intro">Phones, computers and other electronics eventually reach the end of their lives. The formal recycling share measures the fraction of recorded electronic waste entering documented recycling systems — a narrower idea than all reuse, recovery, or informal handling.</p>
+      <div class="figure-grid">
+        <article class="chart-card wide"><div class="chart-heading"><span class="chart-number">FIGURE 11 · REGIONAL TILE-GRID MAP</span></div><h3>Recycling is far from evenly distributed</h3><p class="desc">A schematic world-region tile map, not a geographic area map. Each region occupies one equally sized tile, coloured by its published formal e-waste recycling rate in 2022; rate does not indicate total tonnage.</p><div class="visual" id="map-waste"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>UNSD / UNEP via OWID</span><span data-count="waste">Regional coverage loading</span></div></article>
+        <article class="chart-card"><div class="chart-heading"><span class="chart-number">FIGURE 12 · WAFFLE CHART</span></div><h3>What does the global rate actually mean?</h3><p class="desc">One square ≈ one percentage point of the global formally recycled e-waste share in 2022. A simple visual translation of the world-level estimate, not a count of items.</p><div class="visual" id="waffle"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>UNSD / UNEP via OWID</span><span id="waffle-note">Exact percentage shown at top</span></div></article>
+        <article class="chart-card"><div class="chart-heading"><span class="chart-number">FIGURE 13 · LOLLIPOP COMPARISON</span></div><h3>What do national statistics report?</h3><p class="desc">A selected cross-country comparison of formally recycled e-waste in 2022. Availability varies: countries absent from the source are not estimated or assigned zero.</p><div class="visual" id="waste-ranking"><span class="loading">Loading chart…</span></div><div class="chart-meta"><span>UNSD / UNEP via OWID</span><span id="waste-country-count">Country coverage loading</span></div></article>
+      </div>
+    </section>
+
+    <section class="ending"><div class="eyebrow">Final perspective</div><h2>Connection is not the full story.</h2><p class="chapter-intro">Connectivity, device access and formal recycling cannot be collapsed into one ranking. These indicators measure different things, in different years. Viewed together, they invite a more responsible question: how do we expand access to technology while designing for longer device lifetimes and better recovery?</p></section>
+  </main>
+  <section class="sources" id="sources"><div class="container"><div class="eyebrow">DATA & METHODOLOGY</div><h2>Sources, definitions and limitations</h2><p>The charts fetch published CSV datasets directly from Our World in Data, with attribution to the original collecting organisations. This implementation does not fabricate missing observations. Check source pages for revisions after the publication date.</p><ul>
+    <li><a href="https://ourworldindata.org/grapher/share-of-individuals-using-the-internet" target="_blank" rel="noopener">Individuals using the internet</a> — ITU World Telecommunication/ICT Indicators Database, via World Bank and OWID. Percent of population.</li>
+    <li><a href="https://ourworldindata.org/grapher/mobile-cellular-subscriptions-per-100-people" target="_blank" rel="noopener">Mobile phone subscriptions per 100 people</a> — ITU via World Bank and OWID. Subscriptions, not unique smartphone owners or devices sold.</li>
+    <li><a href="https://ourworldindata.org/grapher/electronic-waste-recycling-rate" target="_blank" rel="noopener">Electronic waste recycling rate</a> — UN Statistics Division and UNEP via OWID. Formal collection/recycling of all e-waste, not specifically phones.</li>
+    <li><a href="https://ourworldindata.org/grapher/population-unwpp" target="_blank" rel="noopener">Population by country</a> — UN World Population Prospects via OWID, used only in the treemap’s transparent population × share estimate.</li>
+    <li><a href="https://gs.statcounter.com/vendor-market-share/mobile/worldwide" target="_blank" rel="noopener">Mobile vendor browsing share (September 2026)</a> — Statcounter Global Stats, with individual source pages for Malaysia, Asia, Europe, India and the United States. The bundled CSV transcribes each page’s six displayed vendors; unlisted brands are not imputed.</li>
+    <li><a href="https://github.com/vega/vega-datasets/tree/master/data" target="_blank" rel="noopener">World map geometry</a> — Vega Datasets; country coordinates are approximate geographic references from the CountryInfo package.</li>
+  </ul><p class="fineprint"><strong>Reading the charts:</strong> 2024 indicators are not claimed to describe smartphone sales or ownership; some countries lack data. Region tiles are schematic, and the year of the 2022 recycling observations differs from the year of the 2024 connectivity observations. Circle areas denote subscription rates. The treemap contains only the largest paired 2023 estimates. CSVs are delivered by their publishers at page-load time and require an internet connection.</p><p class="fineprint" id="status" aria-live="polite">Checking source connections…</p><div class="footer"><span>The Connected World · FIT3179 Data Visualisation 2 · October 2026</span><span>Author: [replace with student name] · Uses Vega-Lite · AI assistance acknowledged</span></div></div></section>
+</body>
+</html>
