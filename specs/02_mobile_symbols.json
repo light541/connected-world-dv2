@@ -66,8 +66,8 @@
       },
       "mark": {
         "type": "circle",
-        "opacity": 0.68,
-        "stroke": "#f8faf9",
+        "opacity": 0.52,
+        "stroke": "#244653",
         "strokeWidth": 0.7
       },
       "encoding": {
@@ -80,20 +80,33 @@
           "type": "quantitative"
         },
         "size": {
-          "field": "metric",
-          "type": "quantitative",
+          "field": "subscriptionBand",
+          "type": "ordinal",
+          "sort": [
+            "0–49",
+            "50–99",
+            "100–149",
+            "150–199",
+            "200+"
+          ],
           "scale": {
             "domain": [
-              0,
-              200
+              "0–49",
+              "50–99",
+              "100–149",
+              "150–199",
+              "200+"
             ],
             "range": [
-              15,
-              550
+              18,
+              45,
+              85,
+              135,
+              205
             ]
           },
           "legend": {
-            "title": "Subscriptions per 100 people",
+            "title": "Subscriptions / 100 (bands)",
             "orient": "bottom"
           }
         },
@@ -111,6 +124,11 @@
             "title": "Subscriptions / 100",
             "format": ".1f",
             "type": "quantitative"
+          },
+          {
+            "field": "subscriptionBand",
+            "type": "ordinal",
+            "title": "Rate band"
           },
           {
             "field": "year",
