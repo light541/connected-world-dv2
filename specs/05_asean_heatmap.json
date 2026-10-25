@@ -40,7 +40,7 @@
     }
   },
   "width": "container",
-  "height": 285,
+  "height": 325,
   "data": {
     "values": []
   },
@@ -107,3 +107,4 @@
     ]
   }
 }
+
