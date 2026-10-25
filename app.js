@@ -72,7 +72,11 @@ async function draw(){
    insight('insight-map-access',`In ${y}, Malaysia reported ${fmt(myUse)}% internet use compared with ${fmt(globalUse)}% worldwide — a difference of ${fmt(myUse-globalUse)} percentage points. The map measures access, not phone sales.`);
  else insight('insight-map-access',`The selected year includes ${net.length} mapped country observations; blank regions have no reported match.`);
  const point=pick(subs,2024).filter(r=>meta[r.iso]?.lat!=null&&meta[r.iso]?.lon!=null &&r.iso.length===3&&r.value<=400)
-   .map(r=>({...r,metric:r.value,lat:meta[r.iso].lat,lon:meta[r.iso].lon}));
+   .map(r=>({
+     ...r, metric:r.value, lat:meta[r.iso].lat, lon:meta[r.iso].lon,
+     subscriptionBand:r.value<50?'0–49':r.value<100?'50–99':r.value<150?'100–149':r.value<200?'150–199':'200+'
+   }))
+   .sort((a,b)=>b.metric-a.metric);
  await embed('map-subs','02_mobile_symbols',s=>{s.layer[1].data.values=point;});
  labelData('subs',point.length);
  const highSubs=point.filter(r=>r.metric>100).length;
@@ -185,7 +189,16 @@ async function draw(){
  const trajCodes=['MYS','SGP','IDN','VNM','PHL'];
  const trajectories=access.filter(r=>r.year>=2005&&r.year<=2024&&(trajCodes.includes(r.iso)||r.country==='World'))
  .map(r=>({country:r.country==='World'?'World':SEA[r.iso],year:r.year,metric:r.value}));
+ // Space out country names at the right edge so the lines are easy to identify.
+ const endpoints=trajectories.filter(d=>d.year===2024).sort((a,b)=>b.metric-a.metric);
+ let previous=105;
+ for(const row of endpoints){
+   row.labelMetric=Math.min(row.metric,previous-7);
+   row.labelX=2024.3;
+   previous=row.labelMetric;
+ }
  await embed('trajectories','12_access_trajectories',s=>s.data.values=trajectories);
+ insight('insight-trajectories','Hover over a line to identify its country and see the exact year and percentage. Labels at the right identify each 2024 endpoint.');
  {const v=pickCountry(access,2024,'World')?.value;setText('kpi-access',Number.isFinite(v)?fmt(v)+'%':'—');}
  {const v=pickCountry(subs,2024,'World')?.value;setText('kpi-mobile',Number.isFinite(v)?fmt(v):'—');}
  setText('kpi-waste',Number.isFinite(worldWaste)?fmt(worldWaste)+'%':'—');
