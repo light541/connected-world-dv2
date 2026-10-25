@@ -8,3 +8,14 @@
 .chart-insight:empty{display:none}
 .visual svg text{font-family:Inter,"Helvetica Neue",Arial,sans-serif}
 @media print{.chart-card{break-inside:avoid}.chapter{break-before:auto}.topbar{position:static}}
+
+/* Figures 02–03: aligned headings, plots and lower annotations. */
+.figure-grid .chart-card.paired-comparison {display:flex;flex-direction:column;min-height:630px}
+.paired-comparison .chart-heading {min-height:22px}
+.paired-comparison h3 {min-height:52px}
+.paired-comparison .desc {min-height:64px}
+.paired-comparison .visual {min-height:405px}
+.paired-comparison .chart-meta {margin-top:auto}
+.paired-comparison .chart-insight {min-height:84px}
+@media(max-width:840px){.figure-grid .chart-card.paired-comparison{min-height:unset}.paired-comparison .chart-meta{margin-top:13px}.paired-comparison .chart-insight{min-height:0}}
+
