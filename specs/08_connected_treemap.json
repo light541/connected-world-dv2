@@ -44,82 +44,163 @@
   "data": {
     "values": []
   },
-  "mark": {
-    "type": "rect",
-    "stroke": "#fff",
-    "strokeWidth": 2
-  },
-  "encoding": {
-    "x": {
-      "field": "x0",
-      "type": "quantitative",
-      "axis": null,
-      "scale": {
-        "domain": [
-          0,
-          100
+  "layer": [
+    {
+      "mark": {
+        "type": "rect",
+        "stroke": "#fff",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "x": {
+          "field": "x0",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "x2": {
+          "field": "x1"
+        },
+        "y": {
+          "field": "y0",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              100
+            ],
+            "reverse": true
+          }
+        },
+        "y2": {
+          "field": "y1"
+        },
+        "color": {
+          "field": "continent",
+          "type": "nominal",
+          "legend": {
+            "orient": "bottom"
+          },
+          "scale": {
+            "domain": [
+              "Africa",
+              "Americas",
+              "Asia",
+              "Europe",
+              "Oceania"
+            ],
+            "range": [
+              "#8a9e8a",
+              "#d1a17d",
+              "#3a8290",
+              "#6f9da2",
+              "#b1a4ad"
+            ]
+          },
+          "title": "Continent"
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "type": "nominal"
+          },
+          {
+            "field": "connected",
+            "title": "Estimated internet users",
+            "format": ",.0f",
+            "type": "quantitative"
+          },
+          {
+            "field": "penetration",
+            "title": "Internet use (%)",
+            "format": ".1f",
+            "type": "quantitative"
+          }
         ]
       }
     },
-    "x2": {
-      "field": "x1"
-    },
-    "y": {
-      "field": "y0",
-      "type": "quantitative",
-      "axis": null,
-      "scale": {
-        "domain": [
-          0,
-          100
-        ],
-        "reverse": true
-      }
-    },
-    "y2": {
-      "field": "y1"
-    },
-    "color": {
-      "field": "continent",
-      "type": "nominal",
-      "legend": {
-        "orient": "bottom"
+    {
+      "transform": [
+        {
+          "filter": "(datum.x1-datum.x0)>=11 && (datum.y1-datum.y0)>=7"
+        },
+        {
+          "calculate": "(datum.x0+datum.x1)/2",
+          "as": "labelX"
+        },
+        {
+          "calculate": "(datum.y0+datum.y1)/2",
+          "as": "labelY"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "baseline": "middle",
+        "fontWeight": "bold",
+        "fontSize": 11,
+        "limit": 90
       },
-      "scale": {
-        "domain": [
-          "Africa",
-          "Americas",
-          "Asia",
-          "Europe",
-          "Oceania"
-        ],
-        "range": [
-          "#8a9e8a",
-          "#d1a17d",
-          "#3a8290",
-          "#6f9da2",
-          "#b1a4ad"
+      "encoding": {
+        "x": {
+          "field": "labelX",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              100
+            ]
+          }
+        },
+        "y": {
+          "field": "labelY",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              100
+            ],
+            "reverse": true
+          }
+        },
+        "text": {
+          "field": "country",
+          "type": "nominal"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.continent === 'Asia'",
+            "value": "#ffffff"
+          },
+          "value": "#173342"
+        },
+        "tooltip": [
+          {
+            "field": "country",
+            "type": "nominal"
+          },
+          {
+            "field": "connected",
+            "title": "Estimated internet users",
+            "format": ",.0f",
+            "type": "quantitative"
+          },
+          {
+            "field": "penetration",
+            "title": "Internet use (%)",
+            "format": ".1f",
+            "type": "quantitative"
+          }
         ]
-      },
-      "title": "Continent"
-    },
-    "tooltip": [
-      {
-        "field": "country",
-        "type": "nominal"
-      },
-      {
-        "field": "connected",
-        "title": "Estimated internet users",
-        "format": ",.0f",
-        "type": "quantitative"
-      },
-      {
-        "field": "penetration",
-        "title": "Internet use (%)",
-        "format": ".1f",
-        "type": "quantitative"
       }
-    ]
-  }
+    }
+  ]
 }
